@@ -38,12 +38,19 @@ export default function AdminPage() {
       ? getQuestionById(questions, gameState.currentQuestionId)
       : null;
 
+  const isFirstQuestion =
+    gameState?.currentQuestionId &&
+    questions.findIndex((q) => q.id === gameState.currentQuestionId) === 0;
+
   const isLastQuestion =
     gameState?.currentQuestionId &&
     questions.findIndex((q) => q.id === gameState.currentQuestionId) === questions.length - 1;
 
   const isFinished =
     !gameState?.isActive && isLastQuestion;
+
+  const isNotStarted =
+    !gameState?.isActive && isFirstQuestion;
 
   return (
     <div className="min-h-screen bg-[#0c1222] p-6">
@@ -59,7 +66,14 @@ export default function AdminPage() {
           </div>
         )}
         <AdminControls gameState={gameState} />
-        {currentQuestion && (
+        {isNotStarted && (
+          <div className="rounded-lg border border-slate-700/50 bg-[#131c2e] p-6 text-center">
+            <p className="text-xl font-medium text-slate-400">
+              لم تبدأ بعد
+            </p>
+          </div>
+        )}
+        {currentQuestion && !isNotStarted && (
           <ActiveQuestionDisplay
             question={currentQuestion}
             showCorrectAnswer={!gameState?.isActive}
