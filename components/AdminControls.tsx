@@ -42,6 +42,7 @@ export function AdminControls({ gameState }: AdminControlsProps) {
       {
         currentQuestionId: firstQuestion.id,
         isActive: true,
+        hasStarted: true,
         updatedAt: new Date().toISOString(),
       },
       { merge: true }
@@ -124,7 +125,7 @@ export function AdminControls({ gameState }: AdminControlsProps) {
 
   async function handleReset() {
     if (isResetting || isTransitioning) return;
-    if (!confirm("هل أنت متأكد؟ سيتم حذف جميع المستخدمين والإجابات والنتائج وبدء من جديد.")) return;
+    if (!confirm("هل أنت متأكد؟ سيتم حذف جميع الإجابات والنتائج وبدء من جديد. الحسابات ستبقى.")) return;
 
     setIsResetting(true);
     const db = getDb();
@@ -147,16 +148,12 @@ export function AdminControls({ gameState }: AdminControlsProps) {
         await deleteDoc(doc(db, "answers", answerDoc.id));
       }
 
-      const usersSnap = await getDocs(collection(db, "users"));
-      for (const userDoc of usersSnap.docs) {
-        await deleteDoc(doc(db, "users", userDoc.id));
-      }
-
       await setDoc(
         doc(db, "gameState", "current"),
         {
           currentQuestionId: firstQuestion?.id ?? "q1",
           isActive: false,
+          hasStarted: false,
           updatedAt: new Date().toISOString(),
         },
         { merge: true }

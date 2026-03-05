@@ -8,6 +8,7 @@ export interface Question {
 export interface GameState {
   currentQuestionId: string;
   isActive: boolean;
+  hasStarted?: boolean;
   updatedAt?: string;
 }
 

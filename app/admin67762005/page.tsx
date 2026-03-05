@@ -50,7 +50,7 @@ export default function AdminPage() {
     !gameState?.isActive && isLastQuestion;
 
   const isNotStarted =
-    !gameState?.isActive && isFirstQuestion;
+    !gameState?.isActive && isFirstQuestion && !gameState?.hasStarted;
 
   return (
     <div className="min-h-screen bg-[#0c1222] p-6">
