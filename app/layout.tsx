@@ -38,7 +38,7 @@ const ibmPlexArabic = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "نادي العربية",
+  title: "أهلا وسهلا",
   description: "Live event - multiple choice questions",
 };
 
