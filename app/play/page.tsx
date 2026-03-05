@@ -83,12 +83,19 @@ export default function PlayPage() {
     // Listener will update answersDoc; this allows QuestionCard to clear submit state
   }
 
+  function handleLogout() {
+    localStorage.removeItem(STORAGE_KEYS.username);
+    localStorage.removeItem(STORAGE_KEYS.realName);
+    setUsername(null);
+    setRealName(null);
+  }
+
   if (uiState === "not_registered") {
     return <AuthEntry onAuthenticated={handleRegistered} />;
   }
 
   if (uiState === "waiting") {
-    return <WaitingScreen />;
+    return <WaitingScreen onLogout={handleLogout} />;
   }
 
   const question = gameState?.currentQuestionId
@@ -102,6 +109,7 @@ export default function PlayPage() {
         username={username!}
         questionId={gameState!.currentQuestionId}
         onAnswered={handleAnswered}
+        onLogout={handleLogout}
       />
     );
   }
@@ -111,9 +119,10 @@ export default function PlayPage() {
       <AnswerConfirmation
         question={question}
         userAnswer={answersDoc.answer}
+        onLogout={handleLogout}
       />
     );
   }
 
-  return <WaitingScreen />;
+  return <WaitingScreen onLogout={handleLogout} />;
 }

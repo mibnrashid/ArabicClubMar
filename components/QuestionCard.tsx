@@ -10,6 +10,7 @@ interface QuestionCardProps {
   username: string;
   questionId: string;
   onAnswered: () => void;
+  onLogout?: () => void;
 }
 
 export function QuestionCard({
@@ -17,6 +18,7 @@ export function QuestionCard({
   username,
   questionId,
   onAnswered,
+  onLogout,
 }: QuestionCardProps) {
   const [selected, setSelected] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -45,7 +47,7 @@ export function QuestionCard({
   const options = Object.entries(question.options);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-6">
+    <div className="relative flex min-h-screen flex-col items-center justify-center p-6">
       <div className="w-full max-w-lg rounded-xl border border-slate-700/50 bg-[#131c2e] p-8 shadow-xl shadow-black/20">
         <h2 className="mb-6 text-center text-xl font-semibold text-slate-100" dir="rtl">
           {question.text}
@@ -83,6 +85,14 @@ export function QuestionCard({
           </button>
         </form>
       </div>
+      {onLogout && (
+        <button
+          onClick={onLogout}
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 rounded-lg border border-slate-600 px-4 py-2 text-sm text-slate-400 transition-colors hover:bg-slate-800/50 hover:text-slate-300"
+        >
+          تسجيل الخروج
+        </button>
+      )}
     </div>
   );
 }
