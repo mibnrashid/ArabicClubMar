@@ -2,20 +2,15 @@
 
 import { useState } from "react";
 import { getDb } from "@/lib/firebase";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
+import { STORAGE_KEYS } from "@/components/RegistrationForm";
 
-const STORAGE_KEYS = {
-  username: "arabic_club_username",
-  realName: "arabic_club_realname",
-} as const;
-
-interface RegistrationFormProps {
-  onRegistered: (username: string, realName: string) => void;
-  onBack?: () => void;
+interface LoginFormProps {
+  onLoggedIn: (username: string, realName: string) => void;
+  onBack: () => void;
 }
 
-export function RegistrationForm({ onRegistered, onBack }: RegistrationFormProps) {
-  const [realName, setRealName] = useState("");
+export function LoginForm({ onLoggedIn, onBack }: LoginFormProps) {
   const [username, setUsername] = useState("");
   const [error, setError] = useState("");
   const [isChecking, setIsChecking] = useState(false);
@@ -24,11 +19,10 @@ export function RegistrationForm({ onRegistered, onBack }: RegistrationFormProps
     e.preventDefault();
     setError("");
 
-    const trimmedName = realName.trim();
     const trimmedUsername = username.trim().toLowerCase();
 
-    if (!trimmedName || !trimmedUsername) {
-      setError("يرجى إدخال الاسم واسم المستخدم");
+    if (!trimmedUsername) {
+      setError("يرجى إدخال اسم المستخدم");
       return;
     }
 
@@ -42,24 +36,21 @@ export function RegistrationForm({ onRegistered, onBack }: RegistrationFormProps
     try {
       const db = getDb();
       const userRef = doc(db, "users", trimmedUsername);
-      const existing = await getDoc(userRef);
+      const userDoc = await getDoc(userRef);
 
-      if (existing.exists()) {
-        setError("اسم المستخدم مستخدم بالفعل، يرجى اختيار اسم آخر");
+      if (!userDoc.exists()) {
+        setError("اسم المستخدم غير موجود، يرجى التسجيل أولاً");
         setIsChecking(false);
         return;
       }
 
-      await setDoc(userRef, {
-        username: trimmedUsername,
-        realName: trimmedName,
-        createdAt: new Date().toISOString(),
-      });
+      const data = userDoc.data();
+      const realName = data.realName ?? "";
 
       localStorage.setItem(STORAGE_KEYS.username, trimmedUsername);
-      localStorage.setItem(STORAGE_KEYS.realName, trimmedName);
+      localStorage.setItem(STORAGE_KEYS.realName, realName);
 
-      onRegistered(trimmedUsername, trimmedName);
+      onLoggedIn(trimmedUsername, realName);
     } catch (err) {
       setError("حدث خطأ، يرجى المحاولة مرة أخرى");
       console.error(err);
@@ -72,34 +63,15 @@ export function RegistrationForm({ onRegistered, onBack }: RegistrationFormProps
     <div className="flex min-h-screen flex-col items-center justify-center p-6">
       <div className="w-full max-w-md rounded-xl border border-zinc-200 bg-white p-8 shadow-lg dark:border-zinc-800 dark:bg-zinc-900">
         <h1 className="mb-6 text-center text-2xl font-bold text-zinc-900 dark:text-zinc-100">
-          التسجيل
+          تسجيل الدخول
         </h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <div>
-            <label
-              htmlFor="realName"
-              className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
-            >
-              الاسم الحقيقي
-            </label>
-            <input
-              id="realName"
-              type="text"
-              value={realName}
-              onChange={(e) => setRealName(e.target.value)}
-              placeholder="أحمد محمد"
-              className="w-full rounded-lg border border-zinc-300 px-4 py-2 text-zinc-900 placeholder-zinc-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
-              dir="rtl"
-              autoComplete="name"
-              disabled={isChecking}
-            />
-          </div>
           <div>
             <label
               htmlFor="username"
               className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
             >
-              اسم المستخدم (فريد)
+              اسم المستخدم
             </label>
             <input
               id="username"
@@ -120,21 +92,17 @@ export function RegistrationForm({ onRegistered, onBack }: RegistrationFormProps
             disabled={isChecking}
             className="rounded-lg bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700 disabled:opacity-50"
           >
-            {isChecking ? "جاري التسجيل..." : "تسجيل"}
+            {isChecking ? "جاري الدخول..." : "دخول"}
           </button>
-          {onBack && (
-            <button
-              type="button"
-              onClick={onBack}
-              className="rounded-lg border border-zinc-300 px-4 py-2 text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-800"
-            >
-              رجوع
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={onBack}
+            className="rounded-lg border border-zinc-300 px-4 py-2 text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-800"
+          >
+            رجوع
+          </button>
         </form>
       </div>
     </div>
   );
 }
-
-export { STORAGE_KEYS };

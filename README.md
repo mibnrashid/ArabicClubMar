@@ -34,7 +34,7 @@ A real-time multiple-choice event web application for ~20 attendees. Built with 
 
 - `/` - Redirects to `/play`
 - `/play` - User experience (register, answer questions)
-- `/admin` - Admin dashboard (start/stop/next question, live results)
+- `/admin67762005` - Admin dashboard (start/stop/next question, live results)
 
 ## Questions
 

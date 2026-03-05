@@ -30,6 +30,7 @@ interface AdminControlsProps {
 
 export function AdminControls({ gameState }: AdminControlsProps) {
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
 
   async function handleStart() {
     const db = getDb();
@@ -121,6 +122,52 @@ export function AdminControls({ gameState }: AdminControlsProps) {
     }
   }
 
+  async function handleReset() {
+    if (isResetting || isTransitioning) return;
+    if (!confirm("هل أنت متأكد؟ سيتم حذف جميع المستخدمين والإجابات والنتائج وبدء من جديد.")) return;
+
+    setIsResetting(true);
+    const db = getDb();
+    const firstQuestion = questions[0];
+
+    try {
+      const resultsSnap = await getDocs(collection(db, "results"));
+      for (const resultDoc of resultsSnap.docs) {
+        const answersSnap = await getDocs(
+          collection(db, "results", resultDoc.id, "answers")
+        );
+        for (const answerDoc of answersSnap.docs) {
+          await deleteDoc(doc(db, "results", resultDoc.id, "answers", answerDoc.id));
+        }
+        await deleteDoc(doc(db, "results", resultDoc.id));
+      }
+
+      const answersSnap = await getDocs(collection(db, "answers"));
+      for (const answerDoc of answersSnap.docs) {
+        await deleteDoc(doc(db, "answers", answerDoc.id));
+      }
+
+      const usersSnap = await getDocs(collection(db, "users"));
+      for (const userDoc of usersSnap.docs) {
+        await deleteDoc(doc(db, "users", userDoc.id));
+      }
+
+      await setDoc(
+        doc(db, "gameState", "current"),
+        {
+          currentQuestionId: firstQuestion?.id ?? "q1",
+          isActive: false,
+          updatedAt: new Date().toISOString(),
+        },
+        { merge: true }
+      );
+    } catch (err) {
+      console.error("Reset error:", err);
+    } finally {
+      setIsResetting(false);
+    }
+  }
+
   const currentQuestion = gameState?.currentQuestionId
     ? questions.find((q) => q.id === gameState.currentQuestionId)
     : null;
@@ -149,12 +196,14 @@ export function AdminControls({ gameState }: AdminControlsProps) {
         >
           {isTransitioning ? "جاري الانتقال..." : "السؤال التالي"}
         </button>
+        <button
+          onClick={handleReset}
+          disabled={isResetting || isTransitioning}
+          className="rounded-lg bg-red-600 px-4 py-2 font-medium text-white hover:bg-red-700 disabled:opacity-50"
+        >
+          {isResetting ? "جاري إعادة التعيين..." : "إعادة تعيين الكل"}
+        </button>
       </div>
-      {currentQuestion && gameState?.isActive && (
-        <p className="text-sm text-zinc-600 dark:text-zinc-400" dir="rtl">
-          السؤال الحالي: {currentQuestion.text}
-        </p>
-      )}
     </div>
   );
 }

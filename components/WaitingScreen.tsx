@@ -11,12 +11,6 @@ export function WaitingScreen() {
         <p className="mt-2 text-zinc-600 dark:text-zinc-400">
           سيظهر السؤال تلقائياً عند بدء الجولة
         </p>
-        <a
-          href="/admin"
-          className="mt-6 inline-block text-sm text-blue-600 hover:underline"
-        >
-          لوحة التحكم
-        </a>
       </div>
     </div>
   );

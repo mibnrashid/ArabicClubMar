@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { getDb } from "@/lib/firebase";
 import { doc, onSnapshot } from "firebase/firestore";
-import { RegistrationForm, STORAGE_KEYS } from "@/components/RegistrationForm";
+import { AuthEntry } from "@/components/AuthEntry";
+import { STORAGE_KEYS } from "@/components/RegistrationForm";
 import { WaitingScreen } from "@/components/WaitingScreen";
 import { QuestionCard } from "@/components/QuestionCard";
 import { AnswerConfirmation } from "@/components/AnswerConfirmation";
@@ -83,7 +84,7 @@ export default function PlayPage() {
   }
 
   if (uiState === "not_registered") {
-    return <RegistrationForm onRegistered={handleRegistered} />;
+    return <AuthEntry onAuthenticated={handleRegistered} />;
   }
 
   if (uiState === "waiting") {
