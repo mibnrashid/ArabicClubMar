@@ -6,24 +6,12 @@ import { collection, onSnapshot, query, where } from "firebase/firestore";
 
 interface LiveResultsProps {
   currentQuestionId: string | null;
+  optionKeys?: string[];
 }
 
-interface AnswerCounts {
-  A: number;
-  B: number;
-  C: number;
-  D: number;
-  total: number;
-}
-
-export function LiveResults({ currentQuestionId }: LiveResultsProps) {
-  const [counts, setCounts] = useState<AnswerCounts>({
-    A: 0,
-    B: 0,
-    C: 0,
-    D: 0,
-    total: 0,
-  });
+export function LiveResults({ currentQuestionId, optionKeys = [] }: LiveResultsProps) {
+  const [counts, setCounts] = useState<Record<string, number>>({});
+  const [total, setTotal] = useState(0);
 
   useEffect(() => {
     if (!currentQuestionId) return;
@@ -35,24 +23,26 @@ export function LiveResults({ currentQuestionId }: LiveResultsProps) {
     );
 
     const unsub = onSnapshot(q, (snap) => {
-      const newCounts: AnswerCounts = { A: 0, B: 0, C: 0, D: 0, total: 0 };
+      const newCounts: Record<string, number> = {};
+      let newTotal = 0;
 
       snap.docs.forEach((docSnap) => {
         const data = docSnap.data();
         const answer = data.answer as string;
-        if (["A", "B", "C", "D"].includes(answer)) {
-          newCounts[answer as keyof Omit<AnswerCounts, "total">]++;
-        }
-        newCounts.total++;
+        newCounts[answer] = (newCounts[answer] ?? 0) + 1;
+        newTotal++;
       });
 
       setCounts(newCounts);
+      setTotal(newTotal);
     });
 
     return () => unsub();
   }, [currentQuestionId]);
 
-  if (!currentQuestionId || counts.total === 0) {
+  const options = optionKeys.length > 0 ? optionKeys : Object.keys(counts).sort();
+
+  if (!currentQuestionId || total === 0) {
     return (
       <div className="rounded-lg border border-slate-700/50 bg-[#131c2e] p-4">
         <h3 className="mb-2 font-semibold text-slate-100">توزيع الإجابات</h3>
@@ -61,15 +51,13 @@ export function LiveResults({ currentQuestionId }: LiveResultsProps) {
     );
   }
 
-  const options = ["A", "B", "C", "D"] as const;
-
   return (
     <div className="rounded-lg border border-slate-700/50 bg-[#131c2e] p-4">
-      <h3 className="mb-3 font-semibold text-slate-100">توزيع الإجابات ({counts.total} إجابة)</h3>
+      <h3 className="mb-3 font-semibold text-slate-100">توزيع الإجابات ({total} إجابة)</h3>
       <div className="space-y-2">
         {options.map((opt) => {
-          const count = counts[opt];
-          const pct = counts.total > 0 ? Math.round((count / counts.total) * 100) : 0;
+          const count = counts[opt] ?? 0;
+          const pct = total > 0 ? Math.round((count / total) * 100) : 0;
           return (
             <div key={opt} className="flex items-center gap-2">
               <span className="w-6 font-medium text-slate-400">{opt}</span>

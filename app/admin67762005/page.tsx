@@ -79,7 +79,10 @@ export default function AdminPage() {
             showCorrectAnswer={!gameState?.isActive}
           />
         )}
-        <LiveResults currentQuestionId={gameState?.currentQuestionId ?? null} />
+        <LiveResults
+          currentQuestionId={gameState?.currentQuestionId ?? null}
+          optionKeys={currentQuestion ? Object.keys(currentQuestion.options).sort() : undefined}
+        />
         <a
           href="/play"
           className="inline-block text-sm text-blue-400 hover:text-blue-300 hover:underline"
