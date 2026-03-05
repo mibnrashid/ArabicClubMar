@@ -33,10 +33,17 @@ export default function AdminPage() {
     return () => unsub();
   }, []);
 
-  const activeQuestion =
-    gameState?.isActive && gameState?.currentQuestionId
+  const currentQuestion =
+    gameState?.currentQuestionId
       ? getQuestionById(questions, gameState.currentQuestionId)
       : null;
+
+  const isLastQuestion =
+    gameState?.currentQuestionId &&
+    questions.findIndex((q) => q.id === gameState.currentQuestionId) === questions.length - 1;
+
+  const isFinished =
+    !gameState?.isActive && isLastQuestion;
 
   return (
     <div className="min-h-screen bg-zinc-50 p-6 dark:bg-zinc-950">
@@ -44,8 +51,20 @@ export default function AdminPage() {
         <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
           لوحة التحكم
         </h1>
+        {isFinished && (
+          <div className="rounded-lg border border-green-200 bg-green-50 p-6 text-center dark:border-green-900 dark:bg-green-950/30">
+            <p className="text-2xl font-bold text-green-700 dark:text-green-400">
+              تمت الإنتهاء
+            </p>
+          </div>
+        )}
         <AdminControls gameState={gameState} />
-        {activeQuestion && <ActiveQuestionDisplay question={activeQuestion} />}
+        {currentQuestion && (
+          <ActiveQuestionDisplay
+            question={currentQuestion}
+            showCorrectAnswer={!gameState?.isActive}
+          />
+        )}
         <LiveResults currentQuestionId={gameState?.currentQuestionId ?? null} />
         <a
           href="/play"
