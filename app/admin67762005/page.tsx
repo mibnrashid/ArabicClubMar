@@ -6,6 +6,7 @@ import { doc, onSnapshot } from "firebase/firestore";
 import { AdminControls } from "@/components/AdminControls";
 import { ActiveQuestionDisplay } from "@/components/ActiveQuestionDisplay";
 import { LiveResults } from "@/components/LiveResults";
+import { ActivityResults } from "@/components/ActivityResults";
 import { getQuestionById } from "@/lib/gameLogic";
 import type { GameState } from "@/types";
 
@@ -83,6 +84,7 @@ export default function AdminPage() {
           currentQuestionId={gameState?.currentQuestionId ?? null}
           optionKeys={currentQuestion ? Object.keys(currentQuestion.options).sort() : undefined}
         />
+        <ActivityResults />
         <a
           href="/play"
           className="inline-block text-sm text-blue-400 hover:text-blue-300 hover:underline"

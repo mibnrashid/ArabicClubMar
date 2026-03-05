@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getDb } from "@/lib/firebase";
 import { doc, onSnapshot } from "firebase/firestore";
 import { AuthEntry } from "@/components/AuthEntry";
+import { ActivityButton } from "@/components/ActivityButton";
 import { STORAGE_KEYS } from "@/components/RegistrationForm";
 import { WaitingScreen } from "@/components/WaitingScreen";
 import { QuestionCard } from "@/components/QuestionCard";
@@ -90,12 +91,19 @@ export default function PlayPage() {
     setRealName(null);
   }
 
+  const activityButton = gameState?.activityEnabled && isRegistered ? <ActivityButton /> : null;
+
   if (uiState === "not_registered") {
     return <AuthEntry onAuthenticated={handleRegistered} />;
   }
 
   if (uiState === "waiting") {
-    return <WaitingScreen onLogout={handleLogout} />;
+    return (
+      <>
+        {activityButton}
+        <WaitingScreen onLogout={handleLogout} />
+      </>
+    );
   }
 
   const question = gameState?.currentQuestionId
@@ -104,25 +112,36 @@ export default function PlayPage() {
 
   if (uiState === "active_not_answered" && question) {
     return (
-      <QuestionCard
-        question={question}
-        username={username!}
-        questionId={gameState!.currentQuestionId}
-        onAnswered={handleAnswered}
-        onLogout={handleLogout}
-      />
+      <>
+        {activityButton}
+        <QuestionCard
+          question={question}
+          username={username!}
+          questionId={gameState!.currentQuestionId}
+          onAnswered={handleAnswered}
+          onLogout={handleLogout}
+        />
+      </>
     );
   }
 
   if (uiState === "answered" && question && answersDoc) {
     return (
-      <AnswerConfirmation
-        question={question}
-        userAnswer={answersDoc.answer}
-        onLogout={handleLogout}
-      />
+      <>
+        {activityButton}
+        <AnswerConfirmation
+          question={question}
+          userAnswer={answersDoc.answer}
+          onLogout={handleLogout}
+        />
+      </>
     );
   }
 
-  return <WaitingScreen onLogout={handleLogout} />;
+  return (
+    <>
+      {activityButton}
+      <WaitingScreen onLogout={handleLogout} />
+    </>
+  );
 }

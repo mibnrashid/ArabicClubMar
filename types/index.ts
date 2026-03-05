@@ -9,7 +9,14 @@ export interface GameState {
   currentQuestionId: string;
   isActive: boolean;
   hasStarted?: boolean;
+  activityEnabled?: boolean;
   updatedAt?: string;
+}
+
+export interface ActivityAnswerDoc {
+  username: string;
+  answers: Record<string, "like" | "dislike">;
+  submittedAt: string;
 }
 
 export interface UserDoc {

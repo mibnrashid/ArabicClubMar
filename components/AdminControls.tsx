@@ -123,6 +123,19 @@ export function AdminControls({ gameState }: AdminControlsProps) {
     }
   }
 
+  async function handleActivityToggle() {
+    const db = getDb();
+    const current = gameState?.activityEnabled ?? false;
+    await setDoc(
+      doc(db, "gameState", "current"),
+      {
+        activityEnabled: !current,
+        updatedAt: new Date().toISOString(),
+      },
+      { merge: true }
+    );
+  }
+
   async function handleReset() {
     if (isResetting || isTransitioning) return;
     if (!confirm("هل أنت متأكد؟ سيتم حذف جميع الإجابات والنتائج وبدء من جديد. الحسابات ستبقى.")) return;
@@ -146,6 +159,11 @@ export function AdminControls({ gameState }: AdminControlsProps) {
       const answersSnap = await getDocs(collection(db, "answers"));
       for (const answerDoc of answersSnap.docs) {
         await deleteDoc(doc(db, "answers", answerDoc.id));
+      }
+
+      const activitySnap = await getDocs(collection(db, "activityAnswers"));
+      for (const activityDoc of activitySnap.docs) {
+        await deleteDoc(doc(db, "activityAnswers", activityDoc.id));
       }
 
       await setDoc(
@@ -199,6 +217,13 @@ export function AdminControls({ gameState }: AdminControlsProps) {
           className="rounded-lg bg-red-600 px-4 py-2 font-medium text-white hover:bg-red-500 disabled:opacity-50"
         >
           {isResetting ? "جاري إعادة التعيين..." : "إعادة تعيين الكل"}
+        </button>
+        <button
+          onClick={handleActivityToggle}
+          disabled={isTransitioning}
+          className="rounded-lg bg-violet-600 px-4 py-2 font-medium text-white hover:bg-violet-500 disabled:opacity-50"
+        >
+          {gameState?.activityEnabled ? "إيقاف النشاط" : "تفعيل النشاط"}
         </button>
       </div>
     </div>
