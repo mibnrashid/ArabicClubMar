@@ -178,28 +178,28 @@ export function AdminControls({ gameState }: AdminControlsProps) {
         <button
           onClick={handleStart}
           disabled={isTransitioning || (gameState?.isActive ?? false)}
-          className="rounded-lg bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-700 disabled:opacity-50"
+          className="rounded-lg bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-500 disabled:opacity-50"
         >
           بدء السؤال
         </button>
         <button
           onClick={handleStop}
           disabled={isTransitioning || !gameState?.isActive}
-          className="rounded-lg bg-amber-600 px-4 py-2 font-medium text-white hover:bg-amber-700 disabled:opacity-50"
+          className="rounded-lg bg-amber-600 px-4 py-2 font-medium text-white hover:bg-amber-500 disabled:opacity-50"
         >
           إيقاف
         </button>
         <button
           onClick={handleNext}
           disabled={isTransitioning}
-          className="rounded-lg bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+          className="rounded-lg bg-blue-500 px-4 py-2 font-medium text-white hover:bg-blue-400 disabled:opacity-50"
         >
           {isTransitioning ? "جاري الانتقال..." : "السؤال التالي"}
         </button>
         <button
           onClick={handleReset}
           disabled={isResetting || isTransitioning}
-          className="rounded-lg bg-red-600 px-4 py-2 font-medium text-white hover:bg-red-700 disabled:opacity-50"
+          className="rounded-lg bg-red-600 px-4 py-2 font-medium text-white hover:bg-red-500 disabled:opacity-50"
         >
           {isResetting ? "جاري إعادة التعيين..." : "إعادة تعيين الكل"}
         </button>

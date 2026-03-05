@@ -46,8 +46,8 @@ export function QuestionCard({
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-6">
-      <div className="w-full max-w-lg rounded-xl border border-zinc-200 bg-white p-8 shadow-lg dark:border-zinc-800 dark:bg-zinc-900">
-        <h2 className="mb-6 text-center text-xl font-semibold text-zinc-900 dark:text-zinc-100" dir="rtl">
+      <div className="w-full max-w-lg rounded-xl border border-slate-700/50 bg-[#131c2e] p-8 shadow-xl shadow-black/20">
+        <h2 className="mb-6 text-center text-xl font-semibold text-slate-100" dir="rtl">
           {question.text}
         </h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
@@ -56,8 +56,8 @@ export function QuestionCard({
               key={key}
               className={`flex cursor-pointer items-center gap-3 rounded-lg border px-4 py-3 transition-colors ${
                 selected === key
-                  ? "border-blue-500 bg-blue-50 dark:bg-blue-950/30"
-                  : "border-zinc-200 hover:border-zinc-300 dark:border-zinc-700 dark:hover:border-zinc-600"
+                  ? "border-blue-500 bg-blue-500/20"
+                  : "border-slate-600 hover:border-slate-500 bg-[#1a2744]"
               }`}
             >
               <input
@@ -69,7 +69,7 @@ export function QuestionCard({
                 className="h-4 w-4"
                 disabled={isSubmitting}
               />
-              <span className="font-medium" dir="rtl">
+              <span className="font-medium text-slate-100" dir="rtl">
                 {key}. {label}
               </span>
             </label>
@@ -77,7 +77,7 @@ export function QuestionCard({
           <button
             type="submit"
             disabled={!selected || isSubmitting}
-            className="mt-4 rounded-lg bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700 disabled:opacity-50"
+            className="mt-4 rounded-lg bg-blue-500 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-400 disabled:opacity-50"
           >
             {isSubmitting ? "جاري الإرسال..." : "إرسال الإجابة"}
           </button>

@@ -48,9 +48,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ar" dir="rtl" suppressHydrationWarning>
+    <html lang="ar" dir="rtl" suppressHydrationWarning className="dark">
       <body
-        className={`${ibmPlexArabic.variable} font-sans antialiased`}
+        className={`${ibmPlexArabic.variable} font-sans antialiased bg-[#0c1222] text-slate-100`}
       >
         {children}
       </body>

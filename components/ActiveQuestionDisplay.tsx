@@ -11,11 +11,11 @@ export function ActiveQuestionDisplay({ question, showCorrectAnswer }: ActiveQue
   const options = Object.entries(question.options);
 
   return (
-    <div className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
-      <h3 className="mb-4 font-semibold text-zinc-900 dark:text-zinc-100">
+    <div className="rounded-lg border border-slate-700/50 bg-[#131c2e] p-6">
+      <h3 className="mb-4 font-semibold text-slate-100">
         {showCorrectAnswer ? "السؤال" : "السؤال الحالي"}
       </h3>
-      <p className="mb-4 text-lg" dir="rtl">
+      <p className="mb-4 text-lg text-slate-200" dir="rtl">
         {question.text}
       </p>
       <div className="space-y-2">
@@ -26,18 +26,18 @@ export function ActiveQuestionDisplay({ question, showCorrectAnswer }: ActiveQue
               key={key}
               className={`flex items-center gap-2 rounded-lg border px-3 py-2 ${
                 isCorrect
-                  ? "border-green-500 bg-green-50 dark:border-green-600 dark:bg-green-950/30"
-                  : "border-zinc-200 dark:border-zinc-700"
+                  ? "border-green-500 bg-green-950/40"
+                  : "border-slate-600 bg-[#1a2744]"
               }`}
             >
-              <span className={`font-medium ${isCorrect ? "text-green-700 dark:text-green-400" : "text-zinc-600 dark:text-zinc-400"}`}>
+              <span className={`font-medium ${isCorrect ? "text-green-400" : "text-slate-400"}`}>
                 {key}.
               </span>
-              <span dir="rtl" className={isCorrect ? "text-green-700 dark:text-green-400 font-medium" : ""}>
+              <span dir="rtl" className={isCorrect ? "text-green-400 font-medium" : "text-slate-200"}>
                 {label}
               </span>
               {isCorrect && (
-                <span className="mr-auto text-sm text-green-600 dark:text-green-500">
+                <span className="mr-auto text-sm text-green-500">
                   ✓ الإجابة الصحيحة
                 </span>
               )}

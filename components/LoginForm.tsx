@@ -61,15 +61,15 @@ export function LoginForm({ onLoggedIn, onBack }: LoginFormProps) {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-6">
-      <div className="w-full max-w-md rounded-xl border border-zinc-200 bg-white p-8 shadow-lg dark:border-zinc-800 dark:bg-zinc-900">
-        <h1 className="mb-6 text-center text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+      <div className="w-full max-w-md rounded-xl border border-slate-700/50 bg-[#131c2e] p-8 shadow-xl shadow-black/20">
+        <h1 className="mb-6 text-center text-2xl font-bold text-slate-100">
           تسجيل الدخول
         </h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
             <label
               htmlFor="username"
-              className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+              className="mb-1 block text-sm font-medium text-slate-400"
             >
               اسم المستخدم
             </label>
@@ -79,25 +79,25 @@ export function LoginForm({ onLoggedIn, onBack }: LoginFormProps) {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="ahmed123"
-              className="w-full rounded-lg border border-zinc-300 px-4 py-2 text-zinc-900 placeholder-zinc-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+              className="w-full rounded-lg border border-slate-600 bg-[#1a2744] px-4 py-2 text-slate-100 placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               autoComplete="username"
               disabled={isChecking}
             />
           </div>
           {error && (
-            <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+            <p className="text-sm text-red-400">{error}</p>
           )}
           <button
             type="submit"
             disabled={isChecking}
-            className="rounded-lg bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700 disabled:opacity-50"
+            className="rounded-lg bg-blue-500 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-400 disabled:opacity-50"
           >
             {isChecking ? "جاري الدخول..." : "دخول"}
           </button>
           <button
             type="button"
             onClick={onBack}
-            className="rounded-lg border border-zinc-300 px-4 py-2 text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            className="rounded-lg border border-slate-600 px-4 py-2 text-slate-300 transition-colors hover:bg-slate-800/50"
           >
             رجوع
           </button>

@@ -46,14 +46,14 @@ export default function AdminPage() {
     !gameState?.isActive && isLastQuestion;
 
   return (
-    <div className="min-h-screen bg-zinc-50 p-6 dark:bg-zinc-950">
+    <div className="min-h-screen bg-[#0c1222] p-6">
       <div className="mx-auto max-w-2xl space-y-6">
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+        <h1 className="text-2xl font-bold text-slate-100">
           لوحة التحكم
         </h1>
         {isFinished && (
-          <div className="rounded-lg border border-green-200 bg-green-50 p-6 text-center dark:border-green-900 dark:bg-green-950/30">
-            <p className="text-2xl font-bold text-green-700 dark:text-green-400">
+          <div className="rounded-lg border border-green-600/50 bg-green-950/30 p-6 text-center">
+            <p className="text-2xl font-bold text-green-400">
               تمت الإنتهاء
             </p>
           </div>
@@ -68,7 +68,7 @@ export default function AdminPage() {
         <LiveResults currentQuestionId={gameState?.currentQuestionId ?? null} />
         <a
           href="/play"
-          className="inline-block text-sm text-blue-600 hover:underline"
+          className="inline-block text-sm text-blue-400 hover:text-blue-300 hover:underline"
         >
           العودة للعب
         </a>
